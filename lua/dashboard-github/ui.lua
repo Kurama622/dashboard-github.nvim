@@ -203,9 +203,7 @@ M.activity_heatmap = function(data)
 end
 
 function M.draw(data)
-  local buf = vim.api.nvim_get_current_buf()
-
-  utils.render_heatmap(buf, M.activity_heatmap(data))
+  utils.render_heatmap(state.buf, M.activity_heatmap(data))
 end
 
 function M.load_git_contributions_from_cache()
@@ -577,9 +575,9 @@ local function setup_keymaps(buf)
 end
 
 function M.art_and_shortcuts()
-  local buf = create_dashboard_buffer()
-  render(buf)
-  setup_keymaps(buf)
+  state.buf = create_dashboard_buffer()
+  render(state.buf)
+  setup_keymaps(state.buf)
 end
 
 return M
