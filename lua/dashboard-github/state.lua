@@ -25,7 +25,7 @@ return {
     { key = "r", desc = "Recent Files", action = "<cmd>FzfLua oldfiles<CR>" },
     { key = "n", desc = "New File", action = "<cmd>enew <CR>i" },
     {
-      key = "d",
+      key = "c",
       desc = "Open Neovim Config",
       action = "<cmd>FzfLua files cwd=~/.config/nvim<CR>",
     },
