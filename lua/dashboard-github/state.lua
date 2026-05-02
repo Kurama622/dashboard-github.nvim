@@ -1,7 +1,5 @@
 return {
   months_to_show = 7,
-  maxw = 0,
-  ns = nil,
 
   -- ⣿⣷⣾⡿⢿⣼⢻⡟⣧⠿⣶⠻⠟⣴⣸⣆⣰⠏⠛⣤⢸⡆⣄⠙⣠⠰⠉⢠⠘⣀⢀⡀⠈⠁⠀
   art = {
@@ -55,4 +53,8 @@ return {
     shortcuts_top_offset = 1,
     plugin_info_offset = 1,
   },
+
+  --- @private Unconfigurable
+  maxw = 0,
+  ns = nil,
 }
