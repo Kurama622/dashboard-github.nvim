@@ -1,6 +1,6 @@
 # dashboard-github.nvim
 
-![dashboard-github](https://github.com/user-attachments/assets/74773bca-e0ee-4667-a19b-a09dc4beae1c)
+![dashboard-github](https://github.com/user-attachments/assets/bff980b3-4e8f-44dd-8e3f-7a9cf8cdeec6)
 
 ## Installation
 
