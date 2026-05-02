@@ -57,4 +57,5 @@ return {
   --- @private Unconfigurable
   maxw = 0,
   ns = nil,
+  move_range = {},
 }

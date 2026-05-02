@@ -414,7 +414,7 @@ local function create_dashboard_buffer()
 end
 
 -- Reference from https://github.com/glepnir/nvim/blob/main/lua/private/dashboard.lua
-local function render(buf)
+local function render()
   local lines = {}
   local highlights_to_apply = {}
 
@@ -431,6 +431,9 @@ local function render(buf)
   local shortcuts_start_idx = date_line_idx
     + state.layout.shortcuts_top_offset
     + 1
+  state.move_range[1] = shortcuts_start_idx
+  state.move_range[2] = shortcuts_start_idx + #state.shortcuts - 1
+
   local plugin_info_line_idx = shortcuts_start_idx
     + state.layout.plugin_info_offset
     + #state.shortcuts
@@ -551,16 +554,17 @@ local function render(buf)
       hl_group = state.highlights.footer,
     })
   end
-  vim.bo[buf].modifiable = true
-  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.bo[state.buf].modifiable = true
+  vim.api.nvim_buf_set_lines(state.buf, 0, -1, false, lines)
   vim.api.nvim_buf_set_lines(0, -1, -1, false, { "", "" })
-  vim.bo[buf].modifiable = false
-  vim.api.nvim_win_set_cursor(0, cursor)
+  vim.bo[state.buf].modifiable = false
+  vim.api.nvim_win_set_cursor(state.win, cursor)
+  state.cursor_col = cursor[2]
 
   local ns_id = vim.api.nvim_create_namespace("dashboard")
   for _, hl in ipairs(highlights_to_apply) do
     vim.hl.range(
-      buf,
+      state.buf,
       ns_id,
       hl.hl_group,
       { hl.line, hl.col_start },
@@ -569,21 +573,64 @@ local function render(buf)
   end
 end
 
-local function setup_keymaps(buf)
-  local opts = { noremap = true, silent = true, buffer = buf }
+local function setup_keymaps()
+  local opts =
+    { noremap = true, silent = true, nowait = true, buffer = state.buf }
 
-  for _, key in ipairs({ "h", "l", "v", "V", "j", "k" }) do
-    vim.keymap.set("n", key, "<Nop>", { buffer = buf })
+  for _, key in ipairs({ "h", "l", "v", "V", "I", "A", "i", "a" }) do
+    vim.keymap.set("n", key, "<Nop>", { buffer = state.buf })
   end
+
   for _, shortcut in ipairs(state.shortcuts) do
     vim.keymap.set("n", shortcut.key, shortcut.action, opts)
   end
+
+  vim.keymap.set("n", "<CR>", function()
+    local idx = vim.api.nvim_win_get_cursor(state.win)[1]
+      - state.move_range[1]
+      + 1
+    vim.api.nvim_feedkeys(
+      vim.keycode(state.shortcuts[idx].action),
+      "n",
+      false
+    )
+  end, opts)
+
+  vim.keymap.set("n", "G", function()
+    vim.api.nvim_win_set_cursor(
+      state.win,
+      { state.move_range[2], state.cursor_col }
+    )
+  end, opts)
+  vim.keymap.set("n", "gg", function()
+    vim.api.nvim_win_set_cursor(
+      state.win,
+      { state.move_range[1], state.cursor_col }
+    )
+  end, opts)
+end
+
+local function setup_autocmd()
+  vim.api.nvim_create_autocmd("CursorMoved", {
+    buffer = state.buf,
+    callback = function()
+      local row = vim.api.nvim_win_get_cursor(state.win)[1]
+      if row < state.move_range[1] then
+        row = state.move_range[2]
+      elseif row > state.move_range[2] then
+        row = state.move_range[1]
+      end
+      vim.api.nvim_win_set_cursor(state.win, { row, state.cursor_col })
+    end,
+  })
 end
 
 function M.art_and_shortcuts()
   state.buf = create_dashboard_buffer()
-  render(state.buf)
-  setup_keymaps(state.buf)
+  state.win = vim.api.nvim_get_current_win()
+  render()
+  setup_autocmd()
+  setup_keymaps()
 end
 
 return M
