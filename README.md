@@ -17,3 +17,7 @@
 
 More configuration options can be found here: [dashboard-github/state.lua](./lua/dashboard-github/state.lua)
 
+# Inspiration
+
+- [glepnir/dashboard.lua](https://github.com/glepnir/nvim/blob/main/lua/private/dashboard.lua)
+- [nvzone/typr](https://github.com/nvzone/typr)
