@@ -341,8 +341,15 @@ local function calculate_positions()
   state.layout.top_offset = math.floor(
     (vim.o.lines - math.max(#state.art, #state.shortcuts) - 14) / 2
   )
-  state.layout.date_top_offset =
-    math.floor((#state.art - #state.shortcuts) / 2)
+  state.layout.date_top_offset = math.floor(
+    (
+      #state.art
+      - #state.shortcuts
+      - state.layout.plugin_info_offset
+      - state.layout.shortcuts_top_offset
+      - 2
+    ) / 2
+  )
 
   local art_display_width = 0
   for _, line in ipairs(state.art) do
@@ -418,7 +425,9 @@ local function render(buf)
   end
 
   local art_lines = #state.art
-  local date_line_idx = state.layout.top_offset + state.layout.date_top_offset
+  local date_line_idx = state.layout.top_offset
+    + state.layout.date_top_offset
+    + 1
   local shortcuts_start_idx = date_line_idx
     + state.layout.shortcuts_top_offset
     + 1
@@ -426,11 +435,8 @@ local function render(buf)
     + state.layout.plugin_info_offset
     + #state.shortcuts
 
-  local total_lines = math.max(
-    state.layout.top_offset + art_lines,
-    shortcuts_start_idx + #state.shortcuts,
-    plugin_info_line_idx + 1
-  )
+  local total_lines =
+    math.max(state.layout.top_offset + art_lines, plugin_info_line_idx)
 
   for _ = #lines + 1, total_lines do
     table.insert(lines, "")
