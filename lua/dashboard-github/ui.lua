@@ -558,6 +558,7 @@ local function render()
   vim.api.nvim_buf_set_lines(state.buf, 0, -1, false, lines)
   vim.api.nvim_buf_set_lines(0, -1, -1, false, { "", "" })
   vim.bo[state.buf].modifiable = false
+  vim.bo[state.buf].modified = false
   vim.api.nvim_win_set_cursor(state.win, cursor)
   state.cursor_col = cursor[2]
 
