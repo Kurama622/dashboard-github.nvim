@@ -7,7 +7,6 @@
 ```lua
 {
   "Kurama622/dashboard-github.nvim",
-  dependencies = { "ibhagwan/fzf-lua" },
   opts = {
     username = "Kurama622",
     months_to_show = 8,
