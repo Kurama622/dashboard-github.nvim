@@ -23,7 +23,7 @@ return {
   shortcuts = {
     { key = "f", desc = "Find Files", action = "<cmd>FzfLua files<CR>" },
     { key = "r", desc = "Recent Files", action = "<cmd>FzfLua oldfiles<CR>" },
-    { key = "n", desc = "New File", action = "<cmd>enew <CR>i" },
+    { key = "n", desc = "New File", action = "<cmd>enew|startinsert<CR>" },
     {
       key = "c",
       desc = "Open Neovim Config",
