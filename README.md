@@ -9,7 +9,7 @@
   "Kurama622/dashboard-github.nvim",
   opts = {
     username = "Kurama622",
-    months_to_show = 8,
+    months_to_show = 8, -- Setting to 0 means not displaying heartmap.
   },
 }
 ```

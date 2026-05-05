@@ -249,6 +249,9 @@ local function check_file_valid(file_path, max_time_diff)
 end
 
 function M.async_get_git_contributions(opts)
+  if state.months_to_show == 0 then
+    return
+  end
   if opts.fake_contributions ~= nil then
     local contributions = opts.fake_contributions()
     pcall(M.draw, contributions)
@@ -338,8 +341,10 @@ end
 local function calculate_positions()
   local screen_width = vim.o.columns
 
+  local heartmap_height = state.months_to_show > 0 and 14 or 0
   state.layout.top_offset = math.floor(
-    (vim.o.lines - math.max(#state.art, #state.shortcuts) - 14) / 2
+    (vim.o.lines - math.max(#state.art, #state.shortcuts) - heartmap_height)
+      / 2
   )
   state.layout.date_top_offset = math.floor(
     (
@@ -396,6 +401,7 @@ local function create_dashboard_buffer()
     ["buflisted"] = false,
     ["cursorcolumn"] = false,
     ["cursorline"] = false,
+    ["laststatus"] = 0,
     ["list"] = false,
     ["number"] = false,
     ["relativenumber"] = false,
