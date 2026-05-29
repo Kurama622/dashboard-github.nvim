@@ -107,17 +107,8 @@ M.activity_heatmap = function(data)
     time.month = month_offset
   end
 
-  local week = utils.get_week_of_past_year(os.date(
-    "*t",
-    os.time({
-      year = time.year,
-      month = time.month,
-      day = time.day,
-      hour = 0,
-      min = 0,
-      sec = 0,
-    })
-  ))
+  local week =
+    utils.get_week_of_past_year(month_offset, days_in_months, time.year)
 
   local squares_len = state.months_to_show * 4
 

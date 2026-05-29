@@ -13,20 +13,22 @@ function M.getday_i(day, month, year)
   ) + 1
 end
 
-function M.get_week_of_past_year(date)
-  local target_time = os.time(date)
+function M.get_week_of_past_year(month_offset, days_in_months, year)
+  local last_month = (state.months_to_show + month_offset - 1) % 12 == 0
+      and 12
+    or (state.months_to_show + month_offset - 1) % 12
 
-  local now = os.time()
-  local one_year_ago = now - 365 * 24 * 3600 -- 一年前的时间戳（不考虑闰年差异）
+  local last_day =
+    M.getday_i(days_in_months[last_month], last_month, year + 1)
 
-  if target_time < one_year_ago or target_time > now then
-    return nil
+  local total_day = 0
+  for i = 1, state.months_to_show do
+    local month_i = (i + month_offset - 1) % 12 == 0 and 12
+      or (i + month_offset - 1) % 12
+    total_day = total_day + days_in_months[month_i]
   end
 
-  local diff_days = math.floor((target_time - one_year_ago) / (24 * 3600))
-  local week_number = math.floor(diff_days / 7) + 1 -- +1表示从第1周开始计数
-
-  return week_number
+  return 53 - math.ceil((total_day - last_day) / 7) + math.ceil(last_day / 7)
 end
 
 function M.get_n_months_ago(n)
