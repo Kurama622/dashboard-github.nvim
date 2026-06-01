@@ -13,7 +13,7 @@ function M.getday_i(day, month, year)
   ) + 1
 end
 
-function M.get_week_of_past_year(month_offset, days_in_months, year)
+function M.get_week_of_past_year(month_offset, days_in_months, year, day)
   local last_month = (state.months_to_show + month_offset - 1) % 12 == 0
       and 12
     or (state.months_to_show + month_offset - 1) % 12
@@ -21,14 +21,16 @@ function M.get_week_of_past_year(month_offset, days_in_months, year)
   local last_day =
     M.getday_i(days_in_months[last_month], last_month, year + 1)
 
-  local total_day = 0
+  local total_day, month_i = 0, 0
   for i = 1, state.months_to_show do
-    local month_i = (i + month_offset - 1) % 12 == 0 and 12
+    month_i = (i + month_offset - 1) % 12 == 0 and 12
       or (i + month_offset - 1) % 12
     total_day = total_day + days_in_months[month_i]
   end
 
-  return 53 - math.ceil((total_day - last_day) / 7) + math.ceil(last_day / 7)
+  return 53
+    - math.ceil((total_day - last_day) / 7)
+    + math.ceil((days_in_months[month_i] - day - last_day) / 7)
 end
 
 function M.get_n_months_ago(n)
