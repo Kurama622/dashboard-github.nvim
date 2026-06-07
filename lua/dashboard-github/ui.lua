@@ -97,7 +97,6 @@ M.activity_heatmap = function(data)
   local time = utils.get_n_months_ago(state.months_to_show)
   local month_offset = time.month
 
-  time.day = 1
   if time.day ~= days_in_months[time.month] then
     month_offset = time.month + 1
     if month_offset == 13 then
@@ -107,9 +106,14 @@ M.activity_heatmap = function(data)
     time.month = month_offset
   end
 
-  local week =
-    utils.get_week_of_past_year(month_offset, days_in_months, time.year, time.day)
+  local week = utils.get_week_of_past_year(
+    month_offset,
+    days_in_months,
+    time.year,
+    time.day
+  )
 
+  time.day = 1
   local squares_len = state.months_to_show * 4
 
   local lines = {
