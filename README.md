@@ -16,6 +16,11 @@
 
 More configuration options can be found here: [dashboard-github/state.lua](./lua/dashboard-github/state.lua)
 
+Heatmap depends on the `GITHUB_TOKEN` environment variable.
+```bash
+export GITHUB_TOKEN=ghp_xxx
+```
+
 # Inspiration
 
 - [glepnir/dashboard.lua](https://github.com/glepnir/nvim/blob/main/lua/private/dashboard.lua)
