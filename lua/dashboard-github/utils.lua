@@ -33,31 +33,30 @@ function M.get_week_of_past_year(month_offset, days_in_months, year, day)
     + math.ceil((days_in_months[month_i] - day - last_day) / 7)
 end
 
+function M.days_in_months(y)
+  if (y % 400 == 0) or (y % 4 == 0 and y % 100 ~= 0) then
+    return { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
+  end
+  return { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
+end
+
 function M.get_n_months_ago(n)
   local now = os.date("*t") -- 获取当前时间的表格式
   local year = now.year
   local month = now.month - n
   local day = now.day
 
+  local days_in_months = M.days_in_months(year)
   -- 计算年和月
   while month <= 0 do
     month = month + 12
     year = year - 1
-  end
-
-  -- 处理当月的天数（避免日期溢出，比如3月31日减1个月后应是2月28日或29日）
-  local function days_in_month(y, m)
-    local days = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
-    -- 闰年检测
-    if m == 2 then
-      if (y % 400 == 0) or (y % 4 == 0 and y % 100 ~= 0) then
-        return 29
-      end
+    if month <= 2 then
+      days_in_months = M.days_in_months(year)
     end
-    return days[m]
   end
 
-  local max_day = days_in_month(year, month)
+  local max_day = days_in_months[month]
   if day > max_day then
     day = max_day
   end
@@ -70,8 +69,7 @@ function M.get_n_months_ago(n)
     min = now.min,
     sec = now.sec,
   })
-  -- return os.date("%Y-%m-%d", t)
-  return os.date("*t", t)
+  return os.date("*t", t), days_in_months
 end
 
 M.get_activity_hl = function(n)

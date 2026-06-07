@@ -87,14 +87,13 @@ M.activity_heatmap = function(data)
     "Nov",
     "Dec",
   }
-  local days_in_months = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
   local days = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
 
   local four_colors = { "Red", "Green", "Blue", "Yellow" }
   local monthshl =
     vim.list_extend(vim.list_extend(four_colors, four_colors), four_colors)
 
-  local time = utils.get_n_months_ago(state.months_to_show)
+  local time, days_in_months = utils.get_n_months_ago(state.months_to_show)
   local month_offset = time.month
 
   if time.day ~= days_in_months[time.month] then
